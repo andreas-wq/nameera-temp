@@ -1,0 +1,32 @@
+{
+  "name": "nameera/nameera-template",
+  "description": "Laravel Starter Kit Package dengan UI Admin modern dan komponen Blade terintegrasi",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Nameera\\NameeraTemplate\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Nameera",
+      "email": "dev@nameera.com"
+    }
+  ],
+  "require": {
+    "php": "^8.3",
+    "illuminate/support": "^13.0",
+    "illuminate/console": "^13.0",
+    "illuminate/filesystem": "^13.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Nameera\\NameeraTemplate\\NameeraTemplateServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
