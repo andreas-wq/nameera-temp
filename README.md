@@ -89,7 +89,7 @@ The package provides a comprehensive form system:
 #### Basic Form Components
 
 ```blade
-<x-nameera-input
+<x-nameera::form.input
     name="email"
     label="Email Address"
     type="email"
@@ -97,43 +97,43 @@ The package provides a comprehensive form system:
     :error="$errors->first('email')"
 />
 
-<x-nameera-textarea
+<x-nameera::form.textarea
     name="description"
     label="Description"
     rows="4"
 />
 
-<x-nameera-label for="email" :required="true">Email</x-nameera-label>
-<x-nameera-error for="email" />
+<x-nameera::form.label for="email" :required="true">Email</x-nameera::form.label>
+<x-nameera::form.error for="email" />
 ```
 
 #### Special Form Components (Plugin Wrappers)
 
 ```blade
 {{-- Date picker with Flatpickr --}}
-<x-nameera-datepicker
+<x-nameera::form.datepicker
     name="birth_date"
     label="Birth Date"
     :options="['dateFormat' => 'Y-m-d']"
 />
 
 {{-- Rich text editor with TinyMCE --}}
-<x-nameera-editor
+<x-nameera::form.editor
     name="content"
     label="Content"
 />
 
 {{-- Select with search (Choices.js) --}}
-<x-nameera-select
+<x-nameera::form.select
     name="category_id"
     label="Category"
 >
     <option value="1">Technology</option>
     <option value="2">Business</option>
-</x-nameera-select>
+</x-nameera::form.select>
 
 {{-- File upload with FilePond --}}
-<x-nameera-file-upload
+<x-nameera::form.file-upload
     name="documents[]"
     label="Documents"
     :options="['maxFiles' => 5]"
