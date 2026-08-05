@@ -67,13 +67,15 @@ class InstallCommand extends Command
             }
         }
 
-        // Publish components to resources/views/components/nameera
+        // Publish component views to resources/views/vendor/nameera
+        // This matches Laravel's vendor:publish convention for component views
+        // Copy the entire components directory structure
         $componentsSource = $viewsSource . '/components';
-        $componentsTarget = resource_path('views/components/nameera');
+        $componentsTarget = resource_path('views/vendor/nameera');
 
         if (File::exists($componentsSource)) {
             $this->copyDirectory($componentsSource, $componentsTarget);
-            $this->info('Components published to: ' . $componentsTarget);
+            $this->info('Component views published to: ' . $componentsTarget);
         }
     }
 

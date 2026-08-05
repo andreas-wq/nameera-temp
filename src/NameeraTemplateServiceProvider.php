@@ -5,8 +5,6 @@ namespace Nameera\NameeraTemplate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Nameera\NameeraTemplate\Console\InstallCommand;
-use Nameera\NameeraTemplate\Views\Components\Form\Input;
-use Nameera\NameeraTemplate\Views\Components\Form\Label;
 
 class NameeraTemplateServiceProvider extends ServiceProvider
 {
@@ -39,13 +37,11 @@ class NameeraTemplateServiceProvider extends ServiceProvider
             ], 'nameera-config');
         }
 
-        // Register Blade components with the 'nameera' prefix
-        // This registers <x-nameera::form.input> and <x-nameera::form.label>
-        Blade::component('nameera::form.input', Input::class);
-        Blade::component('nameera::form.label', Label::class);
+        // Register Blade component namespace
+        // This allows components to be referenced as <x-nameera::component-name>
+        Blade::componentNamespace('Nameera\\NameeraTemplate\\Views\\Components', 'nameera');
         
-        // Load views from the published location for components
-        // This ensures components are found after installation
+        // Load views from the package for fallback
         $this->loadViewsFrom(__DIR__ . '/../stubs/resources/views', 'nameera');
     }
 }

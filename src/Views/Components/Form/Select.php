@@ -4,7 +4,7 @@ namespace Nameera\NameeraTemplate\Views\Components\Form;
 
 use Illuminate\View\Component;
 
-class Input extends Component
+class Select extends Component
 {
     /**
      * Create a new component instance.
@@ -15,8 +15,10 @@ class Input extends Component
         public ?string $help = null,
         public ?string $error = null,
         public bool $required = false,
+        public array $options = [],
+        public ?string $placeholder = null,
     ) {
-        $this->id = $id ?? 'input-' . uniqid();
+        $this->id = $id ?? 'select-' . uniqid();
     }
 
     /**
@@ -24,6 +26,6 @@ class Input extends Component
      */
     public function render()
     {
-        return view('components.form.input');
+        return view('components.form.select');
     }
 }

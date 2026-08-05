@@ -4,14 +4,14 @@ namespace Nameera\NameeraTemplate\Views\Components\Form;
 
 use Illuminate\View\Component;
 
-class Label extends Component
+class Error extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $for,
-        public bool $required = false,
+        public ?string $message = null,
+        public string $class = '',
     ) {}
 
     /**
@@ -19,6 +19,6 @@ class Label extends Component
      */
     public function render()
     {
-        return view('components.form.label');
+        return view('components.form.error');
     }
 }
