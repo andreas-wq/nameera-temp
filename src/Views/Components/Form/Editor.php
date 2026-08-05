@@ -33,6 +33,6 @@ class Editor extends Component
      */
     public function render()
     {
-        return view('components.form.editor');
+        return view('nameera::components.form.editor');
     }
 }

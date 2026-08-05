@@ -24,6 +24,6 @@ class Input extends Component
      */
     public function render()
     {
-        return view('components.form.input');
+        return view('nameera::components.form.input');
     }
 }

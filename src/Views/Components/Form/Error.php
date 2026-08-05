@@ -19,6 +19,6 @@ class Error extends Component
      */
     public function render()
     {
-        return view('components.form.error');
+        return view('nameera::components.form.error');
     }
 }

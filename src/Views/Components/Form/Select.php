@@ -26,6 +26,6 @@ class Select extends Component
      */
     public function render()
     {
-        return view('components.form.select');
+        return view('nameera::components.form.select');
     }
 }

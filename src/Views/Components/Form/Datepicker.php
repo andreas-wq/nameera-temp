@@ -32,6 +32,6 @@ class Datepicker extends Component
      */
     public function render()
     {
-        return view('components.form.datepicker');
+        return view('nameera::components.form.datepicker');
     }
 }

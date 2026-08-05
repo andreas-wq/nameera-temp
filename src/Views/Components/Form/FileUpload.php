@@ -35,6 +35,6 @@ class FileUpload extends Component
      */
     public function render()
     {
-        return view('components.form.file-upload');
+        return view('nameera::components.form.file-upload');
     }
 }

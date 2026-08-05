@@ -19,6 +19,6 @@ class Label extends Component
      */
     public function render()
     {
-        return view('components.form.label');
+        return view('nameera::components.form.label');
     }
 }

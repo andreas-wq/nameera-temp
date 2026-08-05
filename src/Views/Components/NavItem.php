@@ -20,6 +20,6 @@ class NavItem extends Component
      */
     public function render()
     {
-        return view('components.nav-item');
+        return view('nameera::components.nav-item');
     }
 }

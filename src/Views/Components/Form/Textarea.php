@@ -25,6 +25,6 @@ class Textarea extends Component
      */
     public function render()
     {
-        return view('components.form.textarea');
+        return view('nameera::components.form.textarea');
     }
 }
