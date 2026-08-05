@@ -46,18 +46,18 @@
 
                 <!-- Navigation -->
                 <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                    <x-nameera-nav-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" icon="dashboard">
+                    <x-nameera::nav-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')" icon="dashboard">
                         Dashboard
-                    </x-nameera-nav-item>
-                    <x-nameera-nav-item href="{{ route('users.index') }}" :active="request()->routeIs('users.*')" icon="users">
+                    </x-nameera::nav-item>
+                    <x-nameera::nav-item href="{{ route('users.index') }}" :active="request()->routeIs('users.*')" icon="users">
                         Pengguna
-                    </x-nameera-nav-item>
-                    <x-nameera-nav-item href="{{ route('documents.index') }}" :active="request()->routeIs('documents.*')" icon="document">
+                    </x-nameera::nav-item>
+                    <x-nameera::nav-item href="{{ route('documents.index') }}" :active="request()->routeIs('documents.*')" icon="document">
                         Dokumen
-                    </x-nameera-nav-item>
-                    <x-nameera-nav-item href="{{ route('settings') }}" :active="request()->routeIs('settings')" icon="cog">
+                    </x-nameera::nav-item>
+                    <x-nameera::nav-item href="{{ route('settings') }}" :active="request()->routeIs('settings')" icon="cog">
                         Pengaturan
-                    </x-nameera-nav-item>
+                    </x-nameera::nav-item>
                 </nav>
 
                 <!-- User Menu -->

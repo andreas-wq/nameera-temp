@@ -1,1 +1,1 @@
-<x-nameera-form.input {{ $attributes }} />
+<x-nameera::form.input {{ $attributes }} />
