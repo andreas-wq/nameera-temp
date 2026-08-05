@@ -41,8 +41,8 @@
 
                 <!-- Email -->
                 <div class="mb-6">
-                    <x-nameera-label for="email" :required="true">Email Address</x-nameera-label>
-                    <x-nameera-input 
+                    <x-nameera::form.label for="email" :required="true">Email Address</x-nameera::form.label>
+                    <x-nameera::form.input 
                         id="email"
                         type="email"
                         name="email"
@@ -59,7 +59,7 @@
                 <!-- Password -->
                 <div class="mb-6">
                     <div class="flex items-center justify-between mb-1">
-                        <x-nameera-label for="password" :required="true">Password</x-nameera-label>
+                        <x-nameera::form.label for="password" :required="true">Password</x-nameera::form.label>
                         @if(Route::has('password.request'))
                             <a href="{{ route('password.request') }}" class="text-sm text-primary-600 hover:text-primary-500 dark:text-primary-400">
                                 Forgot password?
@@ -67,7 +67,7 @@
                         @endif
                     </div>
                     <div class="relative">
-                        <x-nameera-input 
+                        <x-nameera::form.input 
                             id="password"
                             :type="!$showPassword ? 'password' : 'text'"
                             name="password"

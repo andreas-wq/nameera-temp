@@ -1,4 +1,4 @@
-@extends('nameera::layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Dashboard')
 

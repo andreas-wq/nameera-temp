@@ -53,26 +53,28 @@ class InstallCommand extends Command
     private function publishViews(): void
     {
         $viewsSource = dirname(__DIR__, 2) . '/stubs/resources/views';
-        $viewsTarget = resource_path('views/vendor/nameera');
-
-        if (!File::exists($viewsTarget)) {
-            File::makeDirectory($viewsTarget, 0755, true);
-        }
-
-        // Copy all view directories
-        $viewDirectories = ['auth', 'dashboard', 'errors', 'layouts', 'components'];
+        
+        // Publish auth, dashboard, errors, and layouts views to resources/views
+        $viewDirectories = ['auth', 'dashboard', 'errors', 'layouts'];
         
         foreach ($viewDirectories as $directory) {
             $sourceDir = $viewsSource . '/' . $directory;
-            $targetDir = $viewsTarget . '/' . $directory;
+            $targetDir = resource_path('views/' . $directory);
 
             if (File::exists($sourceDir)) {
                 $this->copyDirectory($sourceDir, $targetDir);
-                $this->info("Views published: {$directory}");
+                $this->info("Views published to resources/views/{$directory}");
             }
         }
 
-        $this->info('All views published to: ' . $viewsTarget);
+        // Publish components to resources/views/components/nameera
+        $componentsSource = $viewsSource . '/components';
+        $componentsTarget = resource_path('views/components/nameera');
+
+        if (File::exists($componentsSource)) {
+            $this->copyDirectory($componentsSource, $componentsTarget);
+            $this->info('Components published to: ' . $componentsTarget);
+        }
     }
 
     /**
