@@ -69,7 +69,7 @@
                     <div class="relative">
                         <x-nameera::form.input 
                             id="password"
-                            :type="!$showPassword ? 'password' : 'text'"
+                            :x-bind:type="!showPassword ? 'password' : 'text'"
                             name="password"
                             placeholder="••••••••"
                             :error="$errors->first('password')"

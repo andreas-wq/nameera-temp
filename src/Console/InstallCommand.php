@@ -4,6 +4,7 @@ namespace Nameera\NameeraTemplate\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 
 class InstallCommand extends Command
 {
@@ -12,39 +13,52 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'nameera:install {--force : Overwrite existing files}';
+    protected $signature = 'nameera:install {--force : Overwrite existing files} {--no-build : Skip npm install and build}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Install Nameera Template Starter Kit assets and configuration';
+    protected $description = 'Install Nameera Template Ultimate Starter Kit with UI Showcase and Auto-Routes';
 
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
-        $this->info('Installing Nameera Template Starter Kit...');
+        $this->info('🚀 Installing Nameera Ultimate Starter Kit...');
 
-        // Publish configuration
+        // 1. Publish configuration
         $this->publishConfig();
 
-        // Publish views and components
+        // 2. Publish views and components (with new pages directory)
         $this->publishViews();
 
-        // Publish JavaScript and CSS assets
+        // 3. Publish JavaScript and CSS assets
         $this->publishAssets();
 
-        // Copy build configuration files
+        // 4. Copy build configuration files
         $this->publishBuildConfig();
 
-        $this->info('Nameera Template installed successfully!');
-        $this->info('Please run the following commands:');
-        $this->info('1. npm install (or yarn install)');
-        $this->info('2. npm run build (or npm run dev for development)');
-        $this->info('3. Add "@vite([\'resources/css/admin.css\', \'resources/js/admin.js\'])" to your layout');
+        // 5. Inject routes automatically
+        $this->injectRoutes();
+
+        // 6. Run npm commands (unless --no-build flag is used)
+        if (!$this->option('no-build')) {
+            $this->runNpmCommands();
+        }
+
+        $this->newLine();
+        $this->info('🎉 Nameera Ultimate Starter Kit installed successfully!');
+        $this->newLine();
+        $this->info('📋 Quick Start Guide:');
+        $this->info('   1. Visit http://your-app.test/ui/dashboard to see the UI showcase');
+        $this->info('   2. Check http://your-app.test/login for the auth page');
+        $this->info('   3. Explore form components at http://your-app.test/ui/form-basic');
+        $this->info('   4. View all available routes with: php artisan route:list');
+        $this->newLine();
+        $this->info('🔧 All assets are ready to use! No additional configuration needed.');
     }
 
     /**
@@ -54,8 +68,8 @@ class InstallCommand extends Command
     {
         $viewsSource = dirname(__DIR__, 2) . '/stubs/resources/views';
         
-        // Publish auth, dashboard, errors, and layouts views to resources/views
-        $viewDirectories = ['auth', 'dashboard', 'errors', 'layouts'];
+        // Publish auth, pages, errors, and layouts views to resources/views
+        $viewDirectories = ['auth', 'pages', 'errors', 'layouts'];
         
         foreach ($viewDirectories as $directory) {
             $sourceDir = $viewsSource . '/' . $directory;
@@ -63,19 +77,17 @@ class InstallCommand extends Command
 
             if (File::exists($sourceDir)) {
                 $this->copyDirectory($sourceDir, $targetDir);
-                $this->info("Views published to resources/views/{$directory}");
+                $this->info("✅ Views published to resources/views/{$directory}");
             }
         }
 
-        // Publish component views to resources/views/vendor/nameera
-        // This matches Laravel's vendor:publish convention for component views
-        // Copy the entire components directory structure
+        // Publish component views to resources/views/components (not vendor)
         $componentsSource = $viewsSource . '/components';
-        $componentsTarget = resource_path('views/vendor/nameera');
+        $componentsTarget = resource_path('views/components');
 
         if (File::exists($componentsSource)) {
             $this->copyDirectory($componentsSource, $componentsTarget);
-            $this->info('Component views published to: ' . $componentsTarget);
+            $this->info('✅ Component views published to: ' . $componentsTarget);
         }
     }
 
@@ -204,6 +216,81 @@ class InstallCommand extends Command
             }
             
             $this->copyDirectory($directory, $targetDir);
+        }
+    }
+
+    /**
+     * Inject UI showcase routes to web.php
+     */
+    private function injectRoutes(): void
+    {
+        $routesStub = dirname(__DIR__, 2) . '/stubs/routes/nameera-ui.php';
+        $webRoutesPath = base_path('routes/web.php');
+
+        if (!File::exists($routesStub)) {
+            $this->warn('Routes stub not found: ' . $routesStub);
+            return;
+        }
+
+        if (!File::exists($webRoutesPath)) {
+            $this->warn('web.php routes file not found: ' . $webRoutesPath);
+            return;
+        }
+
+        // Read existing web.php content
+        $webContent = File::get($webRoutesPath);
+        $routesContent = File::get($routesStub);
+
+        // Check if routes are already injected
+        if (strpos($webContent, '// Nameera UI Showcase Routes') !== false) {
+            $this->info('✅ Routes already injected into web.php');
+            return;
+        }
+
+        // Append routes to web.php
+        $injectedContent = $webContent . PHP_EOL . PHP_EOL . '// Nameera UI Showcase Routes' . PHP_EOL . $routesContent;
+
+        File::put($webRoutesPath, $injectedContent);
+        $this->info('✅ Routes injected to web.php');
+    }
+
+    /**
+     * Run npm install and npm run build
+     */
+    private function runNpmCommands(): void
+    {
+        $this->info('📦 Installing npm dependencies...');
+
+        $npmInstallResult = Process::run('npm install', function (string $type, string $output) {
+            if ($type === Process::ERR) {
+                $this->warn('npm install warning: ' . $output);
+            } else {
+                $this->line($output);
+            }
+        });
+
+        if ($npmInstallResult->failed()) {
+            $this->warn('⚠️ npm install failed. You may need to run it manually.');
+            $this->warn('Error: ' . $npmInstallResult->errorOutput());
+        } else {
+            $this->info('✅ npm dependencies installed');
+        }
+
+        $this->info('🔨 Building assets...');
+
+        $npmBuildResult = Process::run('npm run build', function (string $type, string $output) {
+            if ($type === Process::ERR) {
+                $this->warn('npm build warning: ' . $output);
+            } else {
+                $this->line($output);
+            }
+        });
+
+        if ($npmBuildResult->failed()) {
+            $this->warn('⚠️ npm run build failed. You may need to run it manually.');
+            $this->warn('Error: ' . $npmBuildResult->errorOutput());
+        } else {
+            $this->info('✅ Assets built successfully');
         }
     }
 }
