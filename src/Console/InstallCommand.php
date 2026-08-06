@@ -4,7 +4,7 @@ namespace Nameera\NameeraTemplate\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
+use Symfony\Component\Process\Process as SymfonyProcess;
 
 class InstallCommand extends Command
 {
@@ -261,36 +261,54 @@ class InstallCommand extends Command
     {
         $this->info('📦 Installing npm dependencies...');
 
-        $npmInstallResult = Process::run('npm install', function (string $type, string $output) {
-            if ($type === Process::ERR) {
-                $this->warn('npm install warning: ' . $output);
-            } else {
-                $this->line($output);
-            }
-        });
+        $npmInstallProcess = new SymfonyProcess(['npm', 'install']);
+        $npmInstallProcess->setTimeout(300); // 5 minutes timeout
+        $npmInstallProcess->setWorkingDirectory(base_path());
+        
+        try {
+            $npmInstallProcess->run(function ($type, $buffer) {
+                if (SymfonyProcess::ERR === $type) {
+                    $this->warn('npm install warning: ' . $buffer);
+                } else {
+                    $this->line($buffer);
+                }
+            });
 
-        if ($npmInstallResult->failed()) {
-            $this->warn('⚠️ npm install failed. You may need to run it manually.');
-            $this->warn('Error: ' . $npmInstallResult->errorOutput());
-        } else {
-            $this->info('✅ npm dependencies installed');
+            if ($npmInstallProcess->isSuccessful()) {
+                $this->info('✅ npm dependencies installed');
+            } else {
+                $this->warn('⚠️ npm install failed. You may need to run it manually.');
+                $this->warn('Error: ' . $npmInstallProcess->getErrorOutput());
+            }
+        } catch (\Exception $e) {
+            $this->warn('⚠️ npm install failed with exception: ' . $e->getMessage());
+            $this->warn('You may need to run npm install manually.');
         }
 
         $this->info('🔨 Building assets...');
 
-        $npmBuildResult = Process::run('npm run build', function (string $type, string $output) {
-            if ($type === Process::ERR) {
-                $this->warn('npm build warning: ' . $output);
-            } else {
-                $this->line($output);
-            }
-        });
+        $npmBuildProcess = new SymfonyProcess(['npm', 'run', 'build']);
+        $npmBuildProcess->setTimeout(300); // 5 minutes timeout
+        $npmBuildProcess->setWorkingDirectory(base_path());
+        
+        try {
+            $npmBuildProcess->run(function ($type, $buffer) {
+                if (SymfonyProcess::ERR === $type) {
+                    $this->warn('npm build warning: ' . $buffer);
+                } else {
+                    $this->line($buffer);
+                }
+            });
 
-        if ($npmBuildResult->failed()) {
-            $this->warn('⚠️ npm run build failed. You may need to run it manually.');
-            $this->warn('Error: ' . $npmBuildResult->errorOutput());
-        } else {
-            $this->info('✅ Assets built successfully');
+            if ($npmBuildProcess->isSuccessful()) {
+                $this->info('✅ Assets built successfully');
+            } else {
+                $this->warn('⚠️ npm run build failed. You may need to run it manually.');
+                $this->warn('Error: ' . $npmBuildProcess->getErrorOutput());
+            }
+        } catch (\Exception $e) {
+            $this->warn('⚠️ npm run build failed with exception: ' . $e->getMessage());
+            $this->warn('You may need to run npm run build manually.');
         }
     }
 }
